@@ -32,23 +32,52 @@ window.addEventListener("load", function () {
       item.style.display = "none";
     });
     // 버튼 초기화
-    toggleListArr.forEach(function (item) {
+    toggleBtArr.forEach(function (item) {
       item.classList.remove("active");
     });
   });
-  //   코드 블럭이 같은 기능을 반복
+  // 목록 전체를 클릭해도 이벤트 전달을 막아줌
+  toggleListArr.forEach(function (item) {
+    item.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+  });
+  // 코드 블럭이 같은 기능을 반복
   // 기능을 만들어서 쓴다
   function listToggle(bt, list) {
     // 처음에는 목록을 보여주지 않는다.
     list.style.display = "none";
     // 클릭이벤트가 발생하면 함수 실행
     bt.addEventListener("click", function (e) {
-      e.preventDefault();
+      e.stopPropagation();
       toggleBtArr.forEach(function (item) {
         item.classList.remove("active");
       });
-    //   console.log(list);
-    const nowList = list.getAttribute("id")
+      // console.log(list);
+      const nowListId = list.getAttribute("id");
+      const hideArr = toggleListArr.filter(function (item) {
+        let id = item.getAttribute("id");
+        // console.log(id);
+        if (id !== nowListId) {
+          return this;
+        }
+      });
+      // 새로 저장된 배열의 목록
+      // console.log(hideArr);
+      hideArr.forEach(function (item) {
+        item.style.display = "none";
+      });
+      const css = getComputedStyle(list).display;
+      // display값 비교한다.
+      if (css === "none") {
+        list.style.display = "block";
+        // 클래스를 강제로 추가한다.
+        bt.classList.add("active");
+      } else {
+        list.style.display = "none";
+        // 클래스를 강제로 추가한다.
+        bt.classList.remove("active");
+      }
     });
   }
   listToggle(menuBt, menuList);
@@ -57,4 +86,42 @@ window.addEventListener("load", function () {
   // toggleListArr[1] = joinList
   listToggle(centerBt, centerList);
   // toggleListArr[2] = centerList
+  // =====================================
+  // 전체메뉴 펼침 기능
+  const allMenuArea = this.document.querySelector(".all-menu-area");
+  const allMenu = this.document.querySelector(".all-menu");
+  const cateList = this.document.querySelector(".all-menu-cate");
+  const deliList = this.document.querySelector(".deli-list");
+  const themeList = this.document.querySelector(".theme-list");
+  // ul인 cate-list로 선언하니 스크롤 부분에 커서 올리면 메뉴가 사라짐
+  const cateListWrap = this.document.querySelector(".all-menu-cate-wrap");
+  cateList.addEventListener("mouseleave", function () {
+    allMenu.classList.remove("active"); // 기능 되기 전 가림
+  });
+  cateList.addEventListener("mouseenter", function () {
+    allMenu.classList.add("active");
+  });
+  deliList.addEventListener("mouseenter", function () {
+    allMenu.classList.remove("active");
+  });
+  themeList.addEventListener("mouseenter", function () {
+    allMenu.classList.remove("active");
+  });
+  cateListWrap.addEventListener("mouseenter", function () {
+    allMenu.classList.add("active");
+  });
+  // 서브 카테고리 보여주기 기능
+  const cateLists = this.document.querySelectorAll(".cate-list > li");
+  const cateDepth2 = this.document.querySelectorAll(".cate-depth2-list");
+  cateLists.forEach(function (item, index) {
+    item.addEventListener("mouseenter", function () {
+      cateDepth2.forEach(function (itemSub, indexSub) {
+        itemSub.style.display = "none";
+        if (indexSub === index) {
+          itemSub.style.display = "block";
+        }
+      });
+    });
+  });
+  // =====================================
 });
