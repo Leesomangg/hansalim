@@ -15,8 +15,12 @@ window.addEventListener("load", function () {
       let obj = JSON.parse(str);
       VISUAL_ARR = obj.visual;
       TODAY_GOOD = obj.todaygood;
+      SALE_GOOD = obj.salegood;
+      RECOMMEND_GOOD = obj.recommendgood;
       showVisual(); // 비주얼을 화면에 배치
       showTodayGood(); // 오늘의 물품을 화면에 배치
+      showSaleGood(); // 알뜰 물품을 화면에 배치
+      showRecommendGood(); // 알뜰 물품을 화면에 배치
     }
   };
   // 자료를 호출한다.
@@ -30,6 +34,12 @@ window.addEventListener("load", function () {
   let TODAY_GOOD;
   let todayTag = this.document.getElementById("data-today");
   let todayTag2 = this.document.getElementById("data-today2");
+  // 알뜰 물품
+  let SALE_GOOD;
+  let saleTag = this.document.getElementById("data-sale");
+  // 추천 물품
+  let RECOMMEND_GOOD;
+  let recommendTag = this.document.getElementById("data-recommend");
   // 비주얼 화면 출력 기능
   function showVisual() {
     let html = "";
@@ -117,7 +127,7 @@ window.addEventListener("load", function () {
       }
     });
     botArr.forEach(function (item) {
-      let tag2 = `
+      let tag = `
       <div class="good-box">
       <!-- 제품이미지 -->
       <a href="${item.link}" class="good-img">
@@ -135,10 +145,109 @@ window.addEventListener("load", function () {
       <button class="good-add-cart"></button>
       </div>
       `;
-      htmlBottom += tag2;
+      htmlBottom += tag;
     });
     todayTag.innerHTML = htmlTop;
     todayTag2.innerHTML = htmlBottom;
+  }
+  // ============ 알뜰 물품 ============
+  function showSaleGood() {
+    let html = `
+    <div class="swiper sw-sale">
+    <div class="swiper-wrapper">
+    `;
+    SALE_GOOD.forEach(function (item) {
+      let tag = `
+      <div class="swiper-slide">
+      <div class="good-box">
+      <!-- 제품이미지 -->
+      <a href="${item.link}" class="good-img">
+          <img src="images/${item.pic}" alt="${item.name}">
+          <span class="good-type">${item.tag}</span>
+      </a>
+      <!-- 제품정보 -->
+      <a href="${item.link}" class="good-info">
+          <em>${item.name}</em>(<em>${item.unit}</em>)
+      </a>
+      <!-- 제품가격 -->
+      <a href="${item.link}" class="good-info-price">
+          ${priceToString(item.price)}<em>원</em>
+      </a>
+      <!-- 장바구니 이미지 -->
+      <button class="good-add-cart"></button>
+  </div>
+      </div>
+      `;
+      html += tag;
+    });
+    html += `
+    </div>
+    </div>`;
+    saleTag.innerHTML = html;
+    const swSale = new Swiper(".sw-sale", {
+      slidesPerView: 3, // 보여지는 슬라이드 개수
+      spaceBetween: 16, // 슬라이드 간의 간격
+      slidesPerGroup: 3, // 넘어가는 슬라이드 개수
+      navigation: {
+        prevEl: ".sale .slide-prev",
+        nextEl: ".sale .slide-next",
+      },
+      pagination: {
+        // 페이지 수 출력됨.
+        el: ".sale .slide-pg",
+        type: "fraction", // type을 하지 않으면 점으로 나옴.
+      },
+    });
+  }
+  // ============ 새 물품 ============
+  // ============ 추천 물품 ============
+  function showRecommendGood() {
+    let html = `
+    <div class="swiper sw-recommend">
+    <div class="swiper-wrapper">
+    `;
+    RECOMMEND_GOOD.forEach(function (item) {
+      let tag = `
+      <div class="swiper-slide">
+      <div class="good-box">
+      <!-- 제품이미지 -->
+      <a href="${item.link}" class="good-img">
+          <img src="images/${item.pic}" alt="${item.name}">
+          <span class="good-type">${item.tag}</span>
+      </a>
+      <!-- 제품정보 -->
+      <a href="${item.link}" class="good-info">
+          <em>${item.name}</em>(<em>${item.unit}</em>)
+      </a>
+      <!-- 제품가격 -->
+      <a href="${item.link}" class="good-info-price">
+          ${priceToString(item.price)}<em>원</em>
+      </a>
+      <!-- 장바구니 이미지 -->
+      <button class="good-add-cart"></button>
+  </div>
+      </div>
+      `;
+      html += tag;
+    });
+    html += `
+    </div>
+    </div>`;
+    recommendTag.innerHTML = html;
+    const swRecommend = new Swiper(".sw-recommend", {
+      slidesPerView: 3, // 보여지는 슬라이드 개수
+      spaceBetween: 16, // 슬라이드 간의 간격
+      slidesPerGroup: 3, // 넘어가는 슬라이드 개수
+      navigation: {
+        prevEl: ".recommend .slide-prev",
+        nextEl: ".recommend .slide-next",
+      },
+      pagination: {
+        // 페이지 수 출력됨.
+        el: ".recommend .slide-pg",
+        type: "fraction", // type을 하지 않으면 점으로 나옴.
+      },
+    });
   }
   // ==========================================
 });
