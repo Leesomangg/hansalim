@@ -31,6 +31,19 @@
 .good-img:hover > img {
   transform: scale(1.1);
 }
+.good-type {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  background: #76bd42;
+  text-align: center;
+  line-height: 50px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
 .good-info {
   position: relative;
   display: block;
@@ -68,6 +81,6 @@
   bottom: 30px;
   right: 20px;
 }
-.no-mb{
+.no-mb {
   margin-bottom: 0;
 }

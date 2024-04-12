@@ -16,11 +16,17 @@ window.addEventListener("load", function () {
       VISUAL_ARR = obj.visual;
       TODAY_GOOD = obj.todaygood;
       SALE_GOOD = obj.salegood;
+      NEW_GOOD = obj.newgood;
       RECOMMEND_GOOD = obj.recommendgood;
+      POPULAR_ICON = obj.popularicon;
+      POPULAR_GOOD = obj.populargood;
       showVisual(); // 비주얼을 화면에 배치
       showTodayGood(); // 오늘의 물품을 화면에 배치
       showSaleGood(); // 알뜰 물품을 화면에 배치
-      showRecommendGood(); // 알뜰 물품을 화면에 배치
+      showNewGood(); // 새물품을 화면에 배치
+      showRecommendGood(); // 추천 물품을 화면에 배치
+      showPopularIcon(); // 인기 물품 아이콘을 화면에 배치
+      showPopularGood(); // 인기 물품 목록을 화면에 배치
     }
   };
   // 자료를 호출한다.
@@ -37,9 +43,20 @@ window.addEventListener("load", function () {
   // 알뜰 물품
   let SALE_GOOD;
   let saleTag = this.document.getElementById("data-sale");
+  // 새물품
+  let NEW_GOOD;
+  let newTag = this.document.getElementById("data-new");
+  let newListTag = this.document.getElementById("data-new-list");
   // 추천 물품
   let RECOMMEND_GOOD;
   let recommendTag = this.document.getElementById("data-recommend");
+  // 인기 물품 아이콘
+  let POPULAR_ICON;
+  let popularIconTag = this.document.getElementById("data-popular-icon");
+  // 인기 물품 목록
+  let POPULAR_GOOD;
+  let popularShow = 1; // 목록 중에 먼저 1번을 보여줌
+  let popularGoodTag = this.document.getElementById("data-popular");
   // 비주얼 화면 출력 기능
   function showVisual() {
     let html = "";
@@ -200,6 +217,41 @@ window.addEventListener("load", function () {
     });
   }
   // ============ 새 물품 ============
+  function showNewGood() {
+    // 첫번째 화면 출력 (왼쪽)
+    let obj = NEW_GOOD[0]; // obj라는 변수를 0번째로 선언하고 불러옴
+    let newGoodFirst = `
+    <a href="${obj.link}" class="new-img">
+    <img src="images/${obj.pic}" alt="${obj.title}"/>
+</a>
+<a href="${obj.link}" class="new-title">
+    ${obj.title}
+</a>
+<a href="${obj.link}" class="new-txt">
+    ${obj.txt}
+</a>
+    `;
+    newTag.innerHTML = newGoodFirst;
+    // 두번째 화면 출력 (오른쪽) 나머지 1~4
+    let html = "";
+    NEW_GOOD.forEach(function (item, index) {
+      let tag = "";
+      if (index !== 0) {
+        tag = `
+      <div class="new-box">
+      <a href="${item.link}" class="new-box-img">
+          <img src="images/${item.pic}" alt="${item.title}"/>
+      </a>
+      <a href="${item.link}" class="new-box-title">
+          ${item.title}
+      </a>
+  </div>
+      `;
+      }
+      html += tag;
+    });
+    newListTag.innerHTML = html;
+  }
   // ============ 추천 물품 ============
   function showRecommendGood() {
     let html = `
@@ -247,6 +299,56 @@ window.addEventListener("load", function () {
         el: ".recommend .slide-pg",
         type: "fraction", // type을 하지 않으면 점으로 나옴.
       },
+    });
+  }
+  // ============ 인기 물품 ============
+  // 인기 물품 아이콘 화면 출력
+  function showPopularIcon() {
+    let html = `
+    <div class = "swiper sw-icon">
+    <div class = "swiper-wrapper">
+    `;
+    // 데이터 처리
+    POPULAR_ICON.forEach(function (item) {
+      const tag = `
+      <div class = "swiper-slide">
+      <a href = "${item.link}">
+          <span class = "popular-cate-icon"
+          style = "
+          background : url('images/${item.icon}') no-repeat;
+          background-position : 0px 0px;">
+          </span>
+          <span class = "popular-cate-name">${item.txt}</span>
+      </a>
+  </div>
+      `; // hover 시 변경을 위해 여기서 style 적용해 줌
+      html += tag;
+    });
+    html += `
+    </div>
+    </div>
+    `;
+    popularIconTag.innerHTML = html;
+    const swIcon = new Swiper(".sw-icon", {
+      slidesPerView: 7, // 보여지는 슬라이드 개수
+      spaceBetween: 10, // 슬라이드 간의 간격
+      slidesPerGroup: 7, // 넘어가는 슬라이드 개수
+      navigation: {
+        prevEl: ".popular-cate .popular-slide-prev",
+        nextEl: ".popular-cate .popular-slide-next",
+      },
+    });
+    const tag = document.querySelectorAll(".popular-slide a");
+    tag.forEach(function (item, index) {
+      // 호버 했을때 이미지 변경
+      item.addEventListener("mouseover", function () {
+        const spanTag = this.querySelector(".popular-cate-icon");
+        spanTag.style.backgroundPositionY = "-64px";
+      });
+      item.addEventListener("mouseleave", function () {
+        const spanTag = this.querySelector(".popular-cate-icon");
+        spanTag.style.backgroundPositionY = "0";
+      });
     });
   }
   // ==========================================
