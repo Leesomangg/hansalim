@@ -20,6 +20,8 @@ window.addEventListener("load", function () {
       RECOMMEND_GOOD = obj.recommendgood;
       POPULAR_ICON = obj.popularicon;
       POPULAR_GOOD = obj.populargood;
+      BRAND_ARR = obj.brandarr;
+      BANNER_ARR = obj.bannerarr;
       showVisual(); // 비주얼을 화면에 배치
       showTodayGood(); // 오늘의 물품을 화면에 배치
       showSaleGood(); // 알뜰 물품을 화면에 배치
@@ -27,6 +29,8 @@ window.addEventListener("load", function () {
       showRecommendGood(); // 추천 물품을 화면에 배치
       showPopularIcon(); // 인기 물품 아이콘을 화면에 배치
       showPopularGood(); // 인기 물품 목록을 화면에 배치
+      showBrandArr(); // 브랜드관을 화면에 배치
+      showBannerArr(); // 배너를 화면에 배치
     }
   };
   // 자료를 호출한다.
@@ -57,6 +61,12 @@ window.addEventListener("load", function () {
   let POPULAR_GOOD;
   let popularShow = 1; // 목록 중에 먼저 1번을 보여줌
   let popularGoodTag = this.document.getElementById("data-popular");
+  // 브랜드관
+  let BRAND_ARR;
+  let brandTag = this.document.getElementById("data-brand");
+  // 배너
+  let BANNER_ARR;
+  let bannerTag = this.document.getElementById("data-banner");
   // 비주얼 화면 출력 기능
   function showVisual() {
     let html = "";
@@ -356,11 +366,11 @@ window.addEventListener("load", function () {
         const title = this.querySelector(".popular-cate-name");
         bt.innerHTML = `${title.innerHTML}물품 더보기`;
         // 클릭된 아이콘에 테두리 제거
-        tag.forEach(function(item){
-          item.style.border = "none"
-        })
-        this.style.backgroundColor = "#fff"
-        this.style.border = "2px solid #76bd42"
+        tag.forEach(function (item) {
+          item.style.border = "none";
+        });
+        this.style.backgroundColor = "#fff";
+        this.style.border = "2px solid #76bd42";
         // 아이콘을 클릭했을때 해당 목록이 보여지는 코드
         popularShow = index; // 위에 선언한 1이 index임을 선언
         showPopularGood();
@@ -392,6 +402,88 @@ window.addEventListener("load", function () {
       `;
       html += tag;
       popularGoodTag.innerHTML = html;
+    });
+  }
+  // 브랜드관 화면 출력
+  function showBrandArr() {
+    let html = `
+    <div class="swiper sw-brand">
+    <div class="swiper-wrapper">
+    `;
+    BRAND_ARR.forEach(function (item) {
+      let tag = `
+      <div class="swiper-slide">
+      <div class="brand-box">
+          <a href="${item.link}">
+              <img src="images/${item.pic}" alt="${item.name}"/>
+              <p>${item.name}</p>
+              <ul class="brand-info clearfix">
+                  <li>
+                      <span class="brand-info-title">${item.title1}</span>
+                      <span class="brand-info-value">${item.value1}</span>
+                  </li>
+                  <li>
+                      <span class="brand-info-title">${item.title2}</span>
+                      <span class="brand-info-value">${item.value2}</span>
+                  </li>
+              </ul>
+          </a>
+      </div>
+  </div>
+      `;
+      html += tag;
+    });
+    html += `
+    </div>
+    </div>
+    `;
+    brandTag.innerHTML = html;
+    const swBrand = new Swiper(".sw-brand", {
+      slidesPerView: 3, // 보여지는 슬라이드 개수
+      spaceBetween: 16, // 슬라이드 간의 간격
+      slidesPerGroup: 1, // 넘어가는 슬라이드 개수
+      navigation: {
+        prevEl: ".brand .slide-prev",
+        nextEl: ".brand .slide-next",
+      },
+      pagination: {
+        el: ".brand .slide-pg",
+        type: "fraction",
+      },
+    });
+  }
+  // 배너 화면 출력
+  function showBannerArr() {
+    let html = `
+    <div class = "swiper sw-banner">
+    <div class = "swiper-wrapper">
+    `;
+    BANNER_ARR.forEach(function (item) {
+      let tag = `
+      <div class="swiper-slide">
+            <a href="${item.link}">
+                <img src = "images/${item.image}" alt ="${item.title}"/>
+            </a>
+        </div>
+      `;
+      html += tag;
+    });
+    html += `
+    </div>
+    </div>
+    `;
+    bannerTag.innerHTML = html;
+    const swBanner = new Swiper(".sw-banner", {
+      loop: true,
+      autoplay: {
+        delay: 2500,
+      },
+      slidesPerView: 2,
+      spaceBetween: 0,
+      navigation: {
+        prevEl: ".banner .slide-prev",
+        nextEl: ".banner .slide-next",
+      },
     });
   }
   // ==========================================
