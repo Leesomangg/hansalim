@@ -126,5 +126,13 @@ window.addEventListener("load", function () {
       });
     });
   });
+  // 위로 가기 기능
+  const fixTopBt = document.querySelector(".fix-top");
+  fixTopBt.addEventListener("click", function () {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
   // =====================================
 });
